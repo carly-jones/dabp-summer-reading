@@ -2,6 +2,8 @@ import censusdata
 import requests
 import pandas as pd
 
+census_key = '' # scrubbed for now, TODO: secrets config
+
 def get_counties(state, year):
     counties = []
     geo = censusdata.geographies(censusdata.censusgeo([('state', state), ('county', '*')]), 'acs5', year)
@@ -14,7 +16,7 @@ def get_counties(state, year):
 def get_data_by_block_group(variables, state, county_list, api_key, variable_names):
     data = []
     for county in county_list:
-        url = 'https://api.census.gov/data/2019/acs/acs5?get=' + variables + '&for=block%20group:*&in=state:' + state + '%20county:' + county + '&key=' + api_key
+        url = 'https://api.census.gov/data/2019/acs/acs5?get=' + variables + '&for=block%20group:*&in=state:' + state + '%20county:' + county + '&key=' + census_key
         response = requests.get(url)
         if response.status_code == 200:
             batch = response.json()[1:]
@@ -27,7 +29,7 @@ def get_data_by_block_group(variables, state, county_list, api_key, variable_nam
 
 def get_data_by_tract(variables, state, api_key, variable_names):
     data = []
-    url = 'https://api.census.gov/data/2019/acs/acs5?get=' + variables + '&for=tract:*&in=state:' + state + '&key=' + api_key
+    url = 'https://api.census.gov/data/2019/acs/acs5?get=' + variables + '&for=tract:*&in=state:' + state + '&key=' + census_key
     response = requests.get(url)
     if response.status_code == 200:
         batch = response.json()[1:]
